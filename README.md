@@ -81,4 +81,3 @@ Our project is under
 
 ## Online service
 We also provide online retrieval service [here](http://www.csbio.sjtu.edu.cn/bioinf/LigBind/).
-Our website follows a 'filter and refine' paradigm, which means it can provide more accurate result.
