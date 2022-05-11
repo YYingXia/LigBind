@@ -51,11 +51,14 @@ Prediction for ligands in the ligand-specific datasets with fine-tuned models.
 
 If the target ligand is included in [1159 ligands](https://github.com/yingx/LigBind/dataset/ligand-specific_dataset.csv), you can select the ligand type and use ligand-specific LigBind for prediction:
 
+You can search ligand ID by ligand name from 
+[Ligand information](https://zhanggroup.org//BioLiP/ligand.html).
+
     $ python prediction.py --querypath output/example  --protein_filename 7bv2.pdb --chainid A --method LigBind --ligands ADP,ATP --cpu 20
 
 
 ### Method 2. LigBind-G
-If the target ligand isn't included in [1159 ligands](https://github.com/yingx/LigBind/dataset/ligand-specific_dataset.csv), you can input the ligand SMILES and use ligand-general LigBind-G for prediction:
+If the target ligand isn't included in [1159 ligands](https://github.com/YYingXia/LigBind/blob/master/dataset/ligand-specific_dataset.csv), you can input the ligand SMILES and use ligand-general LigBind-G for prediction:
 
     $ python prediction.py --querypath output/example  --protein_filename 7bv2.pdb --chainid A --method LigBind-G --ligand_filename ligand_smiles.txt --cpu 20
 
@@ -68,7 +71,7 @@ If you want to predict general ligand-binding residues without ligand informatio
 ## License
 
 Our project is under 
-[Apache License](https://github.com/yingx/LigBind/blob/master/LICENSE). 
+[Apache License](https://github.com/YYingXia/LigBind/blob/master/LICENSE). 
 
 ## Online service
 We also provide online retrieval service [here](http://www.csbio.sjtu.edu.cn/bioinf/LigBind/).
