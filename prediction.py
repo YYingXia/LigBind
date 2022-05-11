@@ -1,14 +1,13 @@
 import sys
 import os
 import warnings
-os.environ["CUDA_VISIBLE_DEVICES"] = '1'
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 sys.path.append(os.path.abspath(''))
 LigBind = os.path.abspath('.')
 sys.path.append(LigBind)
 import argparse
 import sys
-sys.path.append('../')
 import os
 import collections
 import numpy as np
@@ -20,8 +19,6 @@ from model_architecture import MetaBind_MultiEdges, Pair_model_spe, Pair_model_g
 from torch import nn
 from torch_geometric.data import DataLoader
 import pickle
-from tqdm import tqdm
-from rdkit import Chem
 from descriptastorus import descriptors
 from sklearn.cluster import MeanShift
 from Bio.PDB.PDBParser import PDBParser
@@ -256,10 +253,10 @@ def ligand_specific_model(ligand_list):
     ligand_model_dict = {}
     for ligand in ligand_list:
         ligand_model_dict[ligand] = []
-        files = os.listdir('./checkpoints/LigBind/{}'.format(ligand))
+        files = os.listdir('./checkpoints/LigBind_pth/{}'.format(ligand))
         for file in files:
             if file.endswith('.pth'):
-                ligand_model_dict[ligand].append('./checkpoints/LigBind/{}/{}'.format(ligand, file))
+                ligand_model_dict[ligand].append('./checkpoints/LigBind_pth/{}/{}'.format(ligand, file))
     return ligand_model_dict
 
 def Bfactor2score(input_pth, pdbid, resid_res_dict, score, pred_site=None, ligand=None):

@@ -21,6 +21,11 @@ Download the source code of LigBind from GitHub:
 
     $ git clone https://github.com/yingx/LigBind.git
 
+Download the trained models from [url](http://www.csbio.sjtu.edu.cn/bioinf/LigBind/files/LigBind_pth.tar.gz).
+
+    $ tar zxvf LigBind_pth.tar.gz
+    $ cp -r LigBind_pth LigBind/checkpoints
+
 Install the dependencies as following:
 
     $ pip install biopython
@@ -33,7 +38,6 @@ Install the dependencies as following:
     $ conda install -c conda-forge rdkit
     $ pip install git+https://github.com/bp-kelley/descriptastorus
 
-
 Install the bioinformatics tools:
 
 (1) Install DSSP for extracting SS (Secondary structure) profiles
@@ -44,6 +48,8 @@ Install the bioinformatics tools:
 (2) Install HHblits for extracting HMM profiles
 To install HHblits and download uniclust30_2018_08 for HHblits, please refer to hh-suite.
 Set the absolute paths of HHblits and uniclust30_2018_08 databases in the script "./prediction.py".
+
+
 
 ## Usage
 ### Method 1. LigBind
