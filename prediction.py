@@ -23,6 +23,7 @@ from descriptastorus import descriptors
 from sklearn.cluster import MeanShift
 from Bio.PDB.PDBParser import PDBParser
 import subprocess
+
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # Set the absolute paths of blast+, HHBlits and their databases in here.
@@ -428,7 +429,8 @@ if __name__ == '__main__':
             print('ERROR: Your query protein chain id "{}" is not in the uploaded protein structure, please check the chain ID!'.format(chain_id))
             raise ValueError
 
-    DSSP_code = subprocess.call([DSSP, '-i', '{}/chain.pdb'.format(query_path), '-o', '{}/chain.dssp'.format(query_path)])
+    if not os.path.exists('{}/chain.dssp'.format(query_path)):
+        DSSP_code = subprocess.call([DSSP, '-i', '{}/chain.pdb'.format(query_path), '-o', '{}/chain.dssp'.format(query_path)])
     if not os.path.exists('{}/chain.dssp'.format(query_path)):
         print("ERROR: The protein structure of chain {} is not complete, please check the structure!")
         raise ValueError
@@ -436,7 +438,8 @@ if __name__ == '__main__':
     print('1. data process...')
     sequence, resid_res_dict, resid_list = cal_fasta(query_path)
 
-    HHblits_code = subprocess.call([HHblits, '-d', HHblits_DB, '-cpu', str(fea_num_threads),
+    if not os.path.exists('{}/chain.hhm'.format(query_path)):
+        HHblits_code = subprocess.call([HHblits, '-d', HHblits_DB, '-cpu', str(fea_num_threads),
                                     '-i', '{}/chain.seq'.format(query_path), '-ohhm', '{}/chain.hhm'.format(query_path)])
 
     hhm_fea = cal_HMM(query_path, sequence)
@@ -478,8 +481,8 @@ if __name__ == '__main__':
             site_num = len(np.unique(pred_site))-1
             print('LigsBind: ligand={} pos_res_num={} site_num={}'.format(ligand, sum(pred_bi), site_num))
             result_df = pd.DataFrame({'Residue_ID':resid_list, 'Residue':list(sequence),'Probability':pred,'Binary':pred_bi,'Site':pred_site})
-            result_df.to_csv('{}/results/{}-binding_result(LigBind).csv'.format(query_path, ligand))
-            print('Results are saved in {}/results/{}-binding_result(LigBind).csv'.format(query_path, ligand))
+            result_df.to_csv('{}/results/{}-binding_result_LigBind.csv'.format(query_path, ligand), index=False)
+            print('Results are saved in {}/results/{}-binding_result_LigBind.csv'.format(query_path, ligand))
 
 
 
@@ -505,8 +508,8 @@ if __name__ == '__main__':
         pred = predict(device, model, model_path_list, test_data, mol_emb)
         result_df = pd.DataFrame(
             {'Residue_ID': resid_list, 'Residue': list(sequence), 'Probability': pred})
-        result_df.to_csv('{}/results/binding_result(LigBind-G).csv'.format(query_path))
-        print('Results are saved in {}/results/binding_result(LigBind-G).csv'.format(query_path))
+        result_df.to_csv('{}/results/binding_result_LigBind-G.csv'.format(query_path), index=False)
+        print('Results are saved in {}/results/binding_result_LigBind-G.csv'.format(query_path))
 
     elif model_type == 'LigBind-G-nolig':
         with open('./checkpoints/ligand_emb.pkl', 'rb') as f:
@@ -528,9 +531,47 @@ if __name__ == '__main__':
         pred = predict(device, model, model_path_list, test_data, mol_emb)
         result_df = pd.DataFrame(
             {'Residue_ID': resid_list, 'Residue': list(sequence), 'Probability': pred})
-        result_df.to_csv('{}/results/binding_result(LigBind-G-nolig).csv'.format(query_path))
-        print('Results are saved in {}/results/binding_result(LigBind-G-nolig).csv'.format(query_path))
+        result_df.to_csv('{}/results/binding_result_LigBind-G-nolig.csv'.format(query_path), index=False)
+        print('Results are saved in {}/results/binding_result_LigBind-G-nolig.csv'.format(query_path))
 
+    result_files = os.listdir('{}/results'.format(query_path))
+    for file in result_files:
+        if file.endswith('csv'):
+            result_df = pd.read_csv('{}/results/{}'.format(query_path, file))
+
+            if file.startswith('binding'):
+                prob_dict = dict(zip(result_df['Residue_ID'].tolist(), result_df['Probability'].tolist()))
+                with open('{}/chain.pdb'.format(query_path),'r') as f:
+                    pdb_text = f.readlines()
+                result_pdb_text = []
+                for line in pdb_text:
+                    if line.startswith('ATOM'):
+                        res_id = int(line[22:26])
+                        if res_id in prob_dict.keys():
+                            prob = prob_dict[res_id]
+                        else:
+                            prob = 0.00
+                        result_pdb_text.append(line[:61] + ' ' + ("%.2f" % prob) + line[66:])
+                    else:
+                        result_pdb_text.append(line)
+            else:
+                binary_dict = dict(zip(result_df['Residue_ID'].tolist(), result_df['Binary'].tolist()))
+                with open('{}/chain.pdb'.format(query_path), 'r') as f:
+                    pdb_text = f.readlines()
+                result_pdb_text = []
+                for line in pdb_text:
+                    if line.startswith('ATOM'):
+                        res_id = int(line[22:26])
+                        if res_id in binary_dict.keys():
+                            binary = binary_dict[res_id]
+                        else:
+                            binary = 0.00
+                        result_pdb_text.append(line[:61] + ' ' + ("%.2f" % binary) + line[66:])
+                    else:
+                        result_pdb_text.append(line)
+
+            with open('{}/results/{}.pdb'.format(query_path, file.split('.')[0]), 'w') as f:
+                f.writelines(result_pdb_text)
 
     print('Done!')
 
