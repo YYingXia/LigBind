@@ -42,19 +42,20 @@ Install the dependencies as following:
     $ pip install torch-sparse==0.5.1
     $ pip install torch-spline-conv==1.2.0
     $ pip install torch-geometric==1.7.0
-    $ conda install -c conda-forge rdkit
+    $ conda install -c conda-forge rdkit   # version 2020.09.1
     $ pip install git+https://github.com/bp-kelley/descriptastorus
      
 
 Install the bioinformatics tools:
 
-(1) Install DSSP for extracting SS (Secondary structure) profiles
+(1) Install DSSP (version: 2.0.4) for extracting SS (Secondary structure) profiles
     
     $ cd LigBind
     $ chmod +x ./dssp
 
 (2) Install HHblits for extracting HMM profiles
-To install HHblits and download uniclust30_2018_08 for HHblits, please refer to hh-suite.
+
+To install HHblits (version: 3.3.0) and download uniclust30_2018_08 for HHblits, please refer to hh-suite.
 Set the absolute paths of HHblits and uniclust30_2018_08 databases in the script "./prediction.py".
 
 
