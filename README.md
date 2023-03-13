@@ -55,7 +55,7 @@ Install the bioinformatics tools:
 
 (2) Install HHblits for extracting HMM profiles
 
-To install HHblits (version: 3.3.0) and download uniclust30_2018_08 for HHblits, please refer to hh-suite.
+To install HHblits (version: 3.3.0) and download uniclust30_2018_08 for HHblits, please refer to [hh-suite](https://github.com/soedinglab/hh-suite).
 Set the absolute paths of HHblits and uniclust30_2018_08 databases in the script "./prediction.py".
 
 
