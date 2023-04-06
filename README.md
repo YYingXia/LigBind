@@ -109,9 +109,7 @@ Then, [CD-HIT](https://github.com/weizhongli/cdhit) (version: cd-hit-v4.8.1-2019
 
 
 ## License
-
-Our project is under [GPL v3.0](https://github.com/YYingXia/LigBind/blob/main/LICENSE).
-The parameters are made available under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). 
+All materials are made available under the terms of the Creative Commons Attribution-NonCommercial 4.0 International Public License (CC BY-NC 4.0) license. You can find details at: [CCBY4.0](https://github.com/YYingXia/LigBind/blob/main/LICENSE).
 
 ## Online service
 Online retrieval service and benchmark datasets are in [here](http://www.csbio.sjtu.edu.cn/bioinf/LigBind/).
